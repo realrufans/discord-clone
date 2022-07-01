@@ -18,7 +18,7 @@ function Message({
   const [user] = useAuthState(auth);
   const serverId = useSelector(selectServerId);
   const channelId = useSelector(selectChannelId);
-  console.log(senderPhotoUrl);
+ 
   return (
     <div className="flex  relative w-[90%]  m-5 justify-between group" key={id}>
       <div className=" flex space-x-3  space-y-3   ">

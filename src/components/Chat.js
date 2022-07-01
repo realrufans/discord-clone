@@ -9,7 +9,7 @@ import {
   UserIcon,
   UsersIcon,
 } from "@heroicons/react/solid";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectChannelId, selectChannelName } from "../features/ChannelSlice";
 import { selectServerId, selectServerName } from "../features/ServerSlice";
@@ -32,7 +32,7 @@ function Chat() {
   const [user] = useAuthState(auth);
   const [usersBoard, setShowUsersBoard] = useState(true);
   const [selectedImage, setSelectedImage] = useState([]);
-  const [cleanedBoardList, setCleanedBoardList] = useState([]);
+  const [BoardList, setBoardList] = useState([]);
   const [messages] = useCollection(
     channelId &&
       db
@@ -43,20 +43,26 @@ function Chat() {
         .collection("messages")
         .orderBy("timeStamp", "asc")
   );
+  console.log(messages?.docs.length);
+  useEffect(() => {
+    const roughBoardList = [];
+    setBoardList([]);
+    messages?.docs.map((doc) => {
+      const { senderName, senderPhotoUrl } = doc.data();
+      const user = {
+        senderName,
+        senderPhotoUrl,
+      };
+      roughBoardList.push(user);
+      const senders = roughBoardList.map(({ senderName }) => senderName);
+      const cleanList = roughBoardList.filter(({ senderName }, index) => {
+        console.log(!senders.includes(senderName, index + 1));
+        return !senders.includes(senderName, index + 1);
+      });
 
-  messages?.docs.map((e) => {
-    // const { senderName, senderPhotoUrl } = e.data();
-    // const bordList = [];
-    // bordList.push(senderName, senderPhotoUrl );
-   
-    // bordList.filter((e, i) => {
-    //   if (bordList.indexOf(e) === i) {
-    //     setCleanedBoardList(e);
-    //   }
-    // });
-  });
-
-   
+      setBoardList(cleanList);
+    });
+  }, [messages?.docs.length]);
 
   const sendMessage = (e) => {
     e.preventDefault();
@@ -179,15 +185,20 @@ function Chat() {
       {usersBoard && (
         <div className="  absolute right-0 top-12  w-[16.5%]  p-3 bg-[#2f3136]  h-[92vh] overflow-y-scroll scrollbar-hide">
           <>
-            <div className=" hover:cursor-pointer my-3  flex justify-between overflow-y-scroll scrollbar-hide   bg-[#2f3136]  ">
-              <img
-                className="h-9 self-center rounded-full"
-                src={user?.photoURL}
-              />
-              <h2 className="p-2 hover:bg-[#36393f] text-discord_blurple ">
-                {user?.displayName}
-              </h2>
-            </div>
+            <h1 className="text-white text-lg">Users In This Channel</h1>
+            {BoardList?.map((user) => {
+              return (
+                <div className=" hover:cursor-pointer hover:bg-[#36393f]  my-6  py-2  flex justify-start overflow-y-scroll scrollbar-hide   bg-[#2f3136]  ">
+                  <img
+                    className="h-9 self-center rounded-full"
+                    src={user.senderPhotoUrl}
+                  />
+                  <h2 className="p-2 text-sm text-discord_blurple ">
+                    {user?.senderName}
+                  </h2>
+                </div>
+              );
+            })}
           </>
         </div>
       )}
