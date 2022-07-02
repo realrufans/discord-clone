@@ -13,14 +13,15 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectChannelId, selectChannelName } from "../features/ChannelSlice";
 import { selectServerId, selectServerName } from "../features/ServerSlice";
-import { auth, db } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import firebase from "firebase/compat/app";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
 import Moment from "react-moment";
 import moment from "moment";
-import { doc, deleteDoc, Timestamp } from "firebase/firestore";
 import Message from "./Message";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { Line } from "rc-progress";
 
 function Chat() {
   let inputRef = useRef();
@@ -31,8 +32,11 @@ function Chat() {
   const channelName = useSelector(selectChannelName);
   const [user] = useAuthState(auth);
   const [usersBoard, setShowUsersBoard] = useState(true);
-  const [selectedImage, setSelectedImage] = useState([]);
+  const [selectedImage, setSelectedImage] = useState("");
   const [BoardList, setBoardList] = useState([]);
+  const [progress, setProgress] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState();
+  const [UploadClicked, setUploadClicked] = useState(false);
   const [messages] = useCollection(
     channelId &&
       db
@@ -43,7 +47,6 @@ function Chat() {
         .collection("messages")
         .orderBy("timeStamp", "asc")
   );
-  console.log(messages?.docs.length);
   useEffect(() => {
     const roughBoardList = [];
     setBoardList([]);
@@ -56,7 +59,6 @@ function Chat() {
       roughBoardList.push(user);
       const senders = roughBoardList.map(({ senderName }) => senderName);
       const cleanList = roughBoardList.filter(({ senderName }, index) => {
-        console.log(!senders.includes(senderName, index + 1));
         return !senders.includes(senderName, index + 1);
       });
 
@@ -64,7 +66,7 @@ function Chat() {
     });
   }, [messages?.docs.length]);
 
-  const sendMessage = (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
 
     if (inputRef.current.value.trim().length > 0) {
@@ -85,16 +87,67 @@ function Chat() {
       inputRef.current.value = "";
       scrollBottom.current?.scrollIntoView({
         behavior: "smooth",
-        block: "start",
+        block: "end",
       });
     }
     return;
   };
 
-  const mediaPicker = (event) => {
-    const { files } = event.target;
-    setSelectedImage(files[0]);
-    console.log(selectedImage);
+  const mediaPicker = (e) => {
+    e.preventDefault();
+    setSelectedImage(e.target.files[0]);
+  };
+  const handleUpload = (e) => {
+    setUploadClicked(true);
+    e.preventDefault();
+    if (!selectedImage) {
+      console.log("Please select an image!");
+      return;
+    }
+    const date = new Date() * 100;
+    const storageRef = ref(storage, `/images/${selectedImage.name + date}`);
+    const uploadTask = uploadBytesResumable(storageRef, selectedImage);
+
+    // upload progress
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setProgress(progress);
+      },
+      (err) => {
+        console.log(err.message);
+        setProgress(null);
+        setUploadClicked(false);
+      },
+      async () => {
+        const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+        if (imageUrl) {
+          setProgress(null);
+          setUploadedImage(imageUrl);
+          setTimeout(() => {
+            setUploadClicked(false);
+          }, 3000);
+          setSelectedImage("");
+
+          // send the image to the chat
+          db.collection("servers")
+            .doc(serverId)
+            .collection("channels")
+            .doc(channelId)
+            .collection("messages")
+            .add({
+              messageImage: imageUrl,
+              timeStamp: firebase.firestore.FieldValue.serverTimestamp(),
+              senderEmail: user?.email,
+              senderName: user?.displayName,
+              senderPhotoUrl: user?.photoURL,
+            });
+        }
+      }
+    );
   };
 
   const showUsers = () => {
@@ -135,8 +188,16 @@ function Chat() {
               senderName,
               senderEmail,
               message,
+              messageImage,
               timeStamp,
             } = doc.data();
+
+            // const isImage =
+            //   message.includes("https://firebasestorage.googleapis.com") &&
+            //   message;
+            // const isMessage = !isImage && message;
+            // console.log(isMessage)
+
             return (
               <Message
                 id={doc.id}
@@ -145,13 +206,23 @@ function Chat() {
                 senderEmail={senderEmail}
                 message={message}
                 timeStamp={timeStamp}
+                messageImage={messageImage}
               />
             );
           })}
 
-          <div className=" m-10 h-2 w-2" ref={scrollBottom}></div>
+          <div className=" m-36 h-2 w-2" ref={scrollBottom}>sdsdsd</div>
         </main>
-
+        {progress && (
+          <Line
+            className={` bg-white absolute bottom-20 items-center  flex mb-0 ml-5  w-[95%] ${
+              usersBoard && "w-[78%] mr-5"
+            }`}
+            percent={progress}
+            strokeWidth={1}
+            strokeColor="#295de7"
+          />
+        )}
         <form
           className={` absolute bg-[#40444b] bottom-0 items-center  flex mb-5 ml-5  w-[95%] ${
             usersBoard && "w-[78%] mr-5"
@@ -159,6 +230,7 @@ function Chat() {
         >
           <label>
             <PhotographIcon className="h-10  ml-3 cursor-pointer   text-white rounded-full" />
+
             <input
               className="hidden"
               type="file"
@@ -176,7 +248,7 @@ function Chat() {
             className=" z-10 text-[#dcddde] bg-transparent w-[100%] placeholder-[#72767d] focus:outline-none   p-4  "
           />
 
-          <button onClick={sendMessage}>
+          <button onClick={selectedImage ? handleUpload : sendMessage}>
             <ArrowCircleRightIcon className=" h-10  rounded-full  text-white bg-discord_blue" />
           </button>
         </form>
@@ -185,7 +257,9 @@ function Chat() {
       {usersBoard && (
         <div className="  absolute right-0 top-12  w-[16.5%]  p-3 bg-[#2f3136]  h-[92vh] overflow-y-scroll scrollbar-hide">
           <>
-            <h1 className="text-white text-lg">Users In This Channel</h1>
+            <h1 className="text-white  text-2xl capitalize bg text-center">
+              users chatting...
+            </h1>
             {BoardList?.map((user) => {
               return (
                 <div className=" hover:cursor-pointer hover:bg-[#36393f]  my-6  py-2  flex justify-start overflow-y-scroll scrollbar-hide   bg-[#2f3136]  ">

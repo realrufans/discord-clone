@@ -14,11 +14,12 @@ function Message({
   senderEmail,
   message,
   timeStamp,
+  messageImage,
 }) {
   const [user] = useAuthState(auth);
   const serverId = useSelector(selectServerId);
   const channelId = useSelector(selectChannelId);
- 
+
   return (
     <div className="flex  relative w-[90%]  m-5 justify-between group" key={id}>
       <div className=" flex space-x-3  space-y-3   ">
@@ -35,6 +36,7 @@ function Message({
           </div>
 
           <p className="text-[#dcddde] mt-2  leading-7  ">{message}</p>
+          {messageImage && <img className="max-h-80 max-w-sm" src={messageImage} />}
         </div>
       </div>
       {senderEmail === user.email && (
