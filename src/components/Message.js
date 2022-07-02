@@ -6,6 +6,8 @@ import { selectServerId } from "../features/ServerSlice";
 import { selectChannelId } from "../features/ChannelSlice";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { collection, deleteDoc, doc } from "firebase/firestore";
+import Zoom from "react-medium-image-zoom";
+import "react-medium-image-zoom/dist/styles.css";
 
 function Message({
   id,
@@ -21,8 +23,8 @@ function Message({
   const channelId = useSelector(selectChannelId);
 
   return (
-    <div className="flex  relative w-[90%]  m-5 justify-between group" key={id}>
-      <div className=" flex space-x-3  space-y-3   ">
+    <div className="flex  relative   m-5 justify-between group" key={id}>
+      <div className=" flex space-x-3  space-y-3 max-w-full ">
         <img className="h-9 self-center rounded-full" src={senderPhotoUrl} />
         <div>
           <div className="flex space-x-2  items-center    ">
@@ -35,8 +37,21 @@ function Message({
             </span>
           </div>
 
-          <p className="text-[#dcddde] mt-2  leading-7  ">{message}</p>
-          {messageImage && <img className="max-h-80 max-w-sm" src={messageImage} />}
+          <p className="text-[#dcddde] mt-2  break-all  leading-7  ">
+            {message}
+          </p>
+          {messageImage && (
+            <Zoom>
+              {" "}
+              <img
+                onClick={() => {
+                  console.log("how are");
+                }}
+                className="max-h-28 max-w-sm"
+                src={messageImage}
+              />
+            </Zoom>
+          )}
         </div>
       </div>
       {senderEmail === user.email && (

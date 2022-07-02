@@ -145,6 +145,11 @@ function Chat() {
               senderName: user?.displayName,
               senderPhotoUrl: user?.photoURL,
             });
+
+          scrollBottom.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "end",
+          });
         }
       }
     );
@@ -178,7 +183,7 @@ function Chat() {
         </header>
 
         <main
-          className={` text-[#2f3136] scrollbar-thin scrollbar-thumb-current  h-[100vh] p-6 mb-10 ${
+          className={` text-[#2f3136] scrollbar-thin scrollbar-thumb-current    h-[100vh] p-6 mb-10 ${
             usersBoard && "w-[83%] "
           }`}
         >
@@ -191,12 +196,6 @@ function Chat() {
               messageImage,
               timeStamp,
             } = doc.data();
-
-            // const isImage =
-            //   message.includes("https://firebasestorage.googleapis.com") &&
-            //   message;
-            // const isMessage = !isImage && message;
-            // console.log(isMessage)
 
             return (
               <Message
@@ -211,8 +210,10 @@ function Chat() {
             );
           })}
 
-          <div className=" m-36 h-2 w-2" ref={scrollBottom}>sdsdsd</div>
+          <div className=" h-2 w-2 mb-28 text-red-700"></div>
+          <div className=" h-2 w-2 mb-36 text-red-700" ref={scrollBottom}></div>
         </main>
+
         {progress && (
           <Line
             className={` bg-white absolute bottom-20 items-center  flex mb-0 ml-5  w-[95%] ${
