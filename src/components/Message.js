@@ -23,13 +23,13 @@ function Message({
   const channelId = useSelector(selectChannelId);
 
   return (
-    <div className="flex  relative   m-5 justify-between group" key={id}>
+    <div className="flex  relative     m-3 justify-between group" key={id}>
       <div className=" flex space-x-3  space-y-3 max-w-full ">
-        <img className="h-9 self-center rounded-full" src={senderPhotoUrl} />
+        <img className="h-9 self-start rounded-full" src={senderPhotoUrl} />
         <div>
           <div className="flex space-x-2  items-center    ">
             {" "}
-            <span className="  text-sm lg:text-lg  text-white hover:underline cursor-pointer ">
+            <span className="  text-xs lg:text-lg  text-white hover:underline cursor-pointer ">
               {senderName}
             </span>
             <span className=" font-light text-xs md:text-sm text-white  ">
@@ -37,9 +37,7 @@ function Message({
             </span>
           </div>
 
-          <p className="text-[#dcddde] mt-2  break-all  leading-7  ">
-            {message}
-          </p>
+          <p className="text-[#dcddde]   break-all  leading-7  ">{message}</p>
           {messageImage && (
             <Zoom>
               {" "}
@@ -47,7 +45,7 @@ function Message({
                 onClick={() => {
                   console.log("how are");
                 }}
-                className="max-h-28 max-w-sm"
+                className="max-h-28 max-w-[100%] mt-2"
                 src={messageImage}
               />
             </Zoom>

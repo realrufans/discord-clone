@@ -1,12 +1,8 @@
 import {
   ArrowCircleRightIcon,
-  BellIcon,
   HashtagIcon,
   PhotographIcon,
   SearchIcon,
-  ServerIcon,
-  TrashIcon,
-  UserIcon,
   UsersIcon,
 } from "@heroicons/react/solid";
 import { useEffect, useRef, useState } from "react";
@@ -17,8 +13,6 @@ import { auth, db, storage } from "../firebase";
 import firebase from "firebase/compat/app";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
-import Moment from "react-moment";
-import moment from "moment";
 import Message from "./Message";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { Line } from "rc-progress";
@@ -47,38 +41,6 @@ function Chat() {
         .collection("messages")
         .orderBy("timeStamp", "asc")
   );
-
-  (function () {
-    var win = window,
-      doc = win.document;
-
-    // If there's a hash, or addEventListener is undefined, stop here
-
-    //scroll to 1
-    window.scrollTo(0, 1);
-    var scrollTop = 1,
-      //reset to 0 on bodyready, if needed
-      bodycheck = setInterval(function () {
-        if (doc.body) {
-          clearInterval(bodycheck);
-          scrollTop = "scrollTop" in doc.body ? doc.body.scrollTop : 1;
-          win.scrollTo(0, scrollTop === 1 ? 0 : 1);
-        }
-      }, 15);
-
-    if (win.addEventListener) {
-      win.addEventListener(
-        "load",
-        function () {
-          setTimeout(function () {
-            //reset to hide addr bar at onload
-            win.scrollTo(0, scrollTop === 1 ? 0 : 1);
-          }, 0);
-        },
-        false
-      );
-    }
-  })();
 
   useEffect(() => {
     const roughBoardList = [];
@@ -140,6 +102,7 @@ function Chat() {
     const date = new Date() * 100;
     const storageRef = ref(storage, `/images/${selectedImage.name + date}`);
     const uploadTask = uploadBytesResumable(storageRef, selectedImage);
+    setSelectedImage("");
 
     // upload progress
     uploadTask.on(
@@ -163,7 +126,6 @@ function Chat() {
           setTimeout(() => {
             setUploadClicked(false);
           }, 3000);
-          setSelectedImage("");
 
           // send the image to the chat
           db.collection("servers")
@@ -193,7 +155,7 @@ function Chat() {
   };
 
   return (
-    <div className=" relative bg-[#36393f]    flex  h-screen   flex-grow text-[#72767d]         ">
+    <div className=" relative bg-[#36393f]    flex    flex-grow text-[#72767d]         ">
       <div className="flex flex-grow flex-col ">
         <header className="flex justify-between border-b  border-gray-800  p-3 items-center  ">
           <div className=" flex  space-x-1">
@@ -217,7 +179,7 @@ function Chat() {
         </header>
 
         <main
-          className={` text-[#2f3136] scrollbar-thin scrollbar-thumb-current  w-screen lg:w-full h-[100vh] p-6 mb-10 ${
+          className={` text-[#2f3136] scrollbar-thin scrollbar-thumb-current  w-screen lg:w-full h-[100vh] p-6 ${
             usersBoard && "w-[83%] "
           }`}
         >
@@ -233,6 +195,7 @@ function Chat() {
 
             return (
               <Message
+                key={doc.id}
                 id={doc.id}
                 senderPhotoUrl={senderPhotoUrl}
                 senderName={senderName}
@@ -258,8 +221,18 @@ function Chat() {
             strokeColor="#295de7"
           />
         )}
+        {selectedImage && (
+          <div
+            class="p-2 bg-discord_blue self-center  bottom-0 mb-24  absolute text-center w-fit  my-0 mx-auto text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex "
+            role="alert"
+          >
+            <span className="font-semibold mr-2 text-center flex-auto">
+              Your photo is ready!
+            </span>
+          </div>
+        )}
         <form
-          className={` absolute bg-[#40444b] bottom-0 items-center  flex mb-5 ml-5  w-[95%] ${
+          className={` absolute bg-[#40444b] bottom-5 items-center  flex my-0 mx-auto left-5 right-5  w-[90%] ${
             usersBoard && "w-[78%] mr-5"
           }  `}
         >
@@ -289,14 +262,17 @@ function Chat() {
       </div>
 
       {usersBoard && (
-        <div className="  absolute  z-10  top-12 right-0  sm:w-[16.5%]  p-3 bg-[#2f3136]  h-[92vh] overflow-y-scroll scrollbar-hide">
+        <div className="  absolute  z-10  top-12 right-0  sm:w-[16.5%]  p-3 bg-[#383a40]  h-[92vh] overflow-y-scroll scrollbar-hide">
           <>
             <h1 className="text-white  text-2xl capitalize bg text-center">
               Users In Channel
             </h1>
             {BoardList?.map((user) => {
               return (
-                <div className=" hover:cursor-pointer hover:bg-[#36393f]  my-6  py-2  flex justify-start overflow-y-scroll scrollbar-hide   bg-[#2f3136]  ">
+                <div
+                  key={user.senderPhotoUrl}
+                  className=" hover:cursor-pointer hover:bg-[#36393f]  my-6  py-2  flex justify-start overflow-y-scroll scrollbar-hide   bg-[#2f3136]  "
+                >
                   <img
                     className="h-9 self-center rounded-full"
                     src={user.senderPhotoUrl}

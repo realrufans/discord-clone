@@ -57,14 +57,15 @@ function Header() {
 
   const login = (e) => {
     e.preventDefault();
-    auth
-      .signInWithPopup(provider)
-      .then(() => navigate(`channels/${serverId}/${channelId} `));
+    auth.signInWithPopup(provider).then(() => {
+      if (channelId && serverId) navigate(`channels/${serverId}/${channelId} `);
+      navigate(`channels/ `);
+    });
   };
 
   return (
     <>
-      {servers?.docs.length >= 0 ? (
+      {auth ? (
         <div>
           <header className={`bg-discord_blue md:h-[10vh] `}>
             <div className="p-4 flex justify-between lg:px-15  py-5   gap-8 max-w-7xl mx-auto my-0">

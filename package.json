@@ -6,12 +6,12 @@
   "dependencies": {
     "@heroicons/react": "^1.0.6",
     "@material-ui/core": "^3.9.4",
-    "@mui/material": "^5.8.6",
     "@reduxjs/toolkit": "^1.8.0",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "firebase": "^9.6.9",
+
     "moment": "^2.29.1",
     "rc-progress": "^3.4.0",
     "react": "^17.0.2",
