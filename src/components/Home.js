@@ -23,7 +23,7 @@ import {
 import discordHead from "../images/discordHead.svg";
 
 function Home() {
-  console.log("home triggered");
+ 
   const dispatch = useDispatch();
   const [user] = useAuthState(auth);
   const navigate = useNavigate();

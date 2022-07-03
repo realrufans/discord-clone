@@ -12,7 +12,7 @@ function Server({ id, serverPhoto, serverName }) {
   const dispatch = useDispatch();
 const serverId = useSelector(selectServerId)
 
-console.log(serverId)
+ 
   // get a server's channels
   const [channels] = useCollection(
     query(

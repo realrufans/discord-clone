@@ -22,7 +22,6 @@ function Channel() {
   const userId = `#${user?.uid.substring(0, 4)}`;
   const serverName = useSelector(selectServerName);
   const serverId = useSelector(selectServerId);
-  console.log('this is servername from redux ', serverName)
 
   const [channels] = useCollection(
     query(
@@ -96,14 +95,13 @@ function Channel() {
         {showChannelChild && (
           <div className=" ">
             {channels?.docs.map((doc) => (
-            <>
-              {console.log(doc.data().channelName)}
-              <ChannelDetails
-                key={doc.id}
-                id={doc.id}
-                channelName={doc.data().channelName}
-              />
-            </>
+              <div key={doc.id}>
+                <ChannelDetails
+                  key={doc.id}
+                  id={doc.id}
+                  channelName={doc.data().channelName}
+                />
+              </div>
             ))}
           </div>
         )}

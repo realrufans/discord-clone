@@ -29,10 +29,10 @@ function Message({
         <div>
           <div className="flex space-x-2  items-center    ">
             {" "}
-            <span className=" text-lg  text-white hover:underline cursor-pointer ">
+            <span className="  text-sm lg:text-lg  text-white hover:underline cursor-pointer ">
               {senderName}
             </span>
-            <span className=" font-light text-sm text-white  ">
+            <span className=" font-light text-xs md:text-sm text-white  ">
               {moment(timeStamp?.toDate().getTime()).format("L")}
             </span>
           </div>

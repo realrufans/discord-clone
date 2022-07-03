@@ -31,7 +31,7 @@ function Chat() {
   const channelId = useSelector(selectChannelId);
   const channelName = useSelector(selectChannelName);
   const [user] = useAuthState(auth);
-  const [usersBoard, setShowUsersBoard] = useState(true);
+  const [usersBoard, setShowUsersBoard] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
   const [BoardList, setBoardList] = useState([]);
   const [progress, setProgress] = useState(null);
@@ -161,7 +161,7 @@ function Chat() {
   return (
     <div className=" relative bg-[#36393f]    flex  h-screen   flex-grow text-[#72767d]         ">
       <div className="flex flex-grow flex-col ">
-        <header className="flex justify-between border-b  border-gray-800  p-3 items-center  ">
+        <header  className="flex justify-between border-b  border-gray-800  p-3 items-center  ">
           <div className=" flex  space-x-1">
             <HashtagIcon className=" font-bold h-6" />
             <h3 className="text-white text-md">{channelName}</h3>
@@ -175,18 +175,19 @@ function Chat() {
               <input
                 type="text"
                 placeholder="Search"
-                className="bg-[#202225] focus:outline-none p-1 text-white pl-1 placeholder-[#72767d] w-40 focus:w-60"
+                className="     hidden  bg-[#202225] focus:outline-none p-1 text-white pl-1 placeholder-[#72767d] w-40 focus:w-60"
               />
-              <SearchIcon className="h-4 cursor-pointer text-[#72767d] mr-1" />
+              <SearchIcon className="     hidden h-4 cursor-pointer text-[#72767d] mr-1" />
             </div>
           </div>
         </header>
 
         <main
-          className={` text-[#2f3136] scrollbar-thin scrollbar-thumb-current    h-[100vh] p-6 mb-10 ${
+          className={` text-[#2f3136] scrollbar-thin scrollbar-thumb-current  w-screen lg:w-full h-[100vh] p-6 mb-10 ${
             usersBoard && "w-[83%] "
           }`}
         >
+          
           {messages?.docs.map((doc) => {
             const {
               senderPhotoUrl,
@@ -236,7 +237,6 @@ function Chat() {
               className="hidden"
               type="file"
               accept="image/*"
-              capture="camera"
               onChange={mediaPicker}
             />
           </label>
@@ -256,10 +256,10 @@ function Chat() {
       </div>
 
       {usersBoard && (
-        <div className="  absolute right-0 top-12  w-[16.5%]  p-3 bg-[#2f3136]  h-[92vh] overflow-y-scroll scrollbar-hide">
+        <div className="  absolute  z-10  top-12 right-0  sm:w-[16.5%]  p-3 bg-[#2f3136]  h-[92vh] overflow-y-scroll scrollbar-hide">
           <>
             <h1 className="text-white  text-2xl capitalize bg text-center">
-              users chatting...
+              Users In Channel
             </h1>
             {BoardList?.map((user) => {
               return (
