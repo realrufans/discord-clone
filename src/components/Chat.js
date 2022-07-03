@@ -47,6 +47,15 @@ function Chat() {
         .collection("messages")
         .orderBy("timeStamp", "asc")
   );
+
+  // hide address bar
+  useEffect(() => {
+    setTimeout(function () {
+      // This hides the address bar:
+      window.scrollTo(0, 1);
+    }, 0);
+  }, []);
+
   useEffect(() => {
     const roughBoardList = [];
     setBoardList([]);
@@ -161,7 +170,7 @@ function Chat() {
   return (
     <div className=" relative bg-[#36393f]    flex  h-screen   flex-grow text-[#72767d]         ">
       <div className="flex flex-grow flex-col ">
-        <header  className="flex justify-between border-b  border-gray-800  p-3 items-center  ">
+        <header className="flex justify-between border-b  border-gray-800  p-3 items-center  ">
           <div className=" flex  space-x-1">
             <HashtagIcon className=" font-bold h-6" />
             <h3 className="text-white text-md">{channelName}</h3>
@@ -187,7 +196,6 @@ function Chat() {
             usersBoard && "w-[83%] "
           }`}
         >
-          
           {messages?.docs.map((doc) => {
             const {
               senderPhotoUrl,
