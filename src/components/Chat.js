@@ -48,13 +48,37 @@ function Chat() {
         .orderBy("timeStamp", "asc")
   );
 
-  // hide address bar
-  useEffect(() => {
-    setTimeout(function () {
-      // This hides the address bar:
-      window.scrollTo(0, 1);
-    }, 0);
-  }, []);
+  (function () {
+    var win = window,
+      doc = win.document;
+
+    // If there's a hash, or addEventListener is undefined, stop here
+
+    //scroll to 1
+    window.scrollTo(0, 1);
+    var scrollTop = 1,
+      //reset to 0 on bodyready, if needed
+      bodycheck = setInterval(function () {
+        if (doc.body) {
+          clearInterval(bodycheck);
+          scrollTop = "scrollTop" in doc.body ? doc.body.scrollTop : 1;
+          win.scrollTo(0, scrollTop === 1 ? 0 : 1);
+        }
+      }, 15);
+
+    if (win.addEventListener) {
+      win.addEventListener(
+        "load",
+        function () {
+          setTimeout(function () {
+            //reset to hide addr bar at onload
+            win.scrollTo(0, scrollTop === 1 ? 0 : 1);
+          }, 0);
+        },
+        false
+      );
+    }
+  })();
 
   useEffect(() => {
     const roughBoardList = [];
@@ -167,6 +191,7 @@ function Chat() {
   const showUsers = () => {
     setShowUsersBoard(!usersBoard);
   };
+
   return (
     <div className=" relative bg-[#36393f]    flex  h-screen   flex-grow text-[#72767d]         ">
       <div className="flex flex-grow flex-col ">
