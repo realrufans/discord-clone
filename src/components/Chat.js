@@ -207,13 +207,13 @@ function Chat() {
             );
           })}
 
-          <div className=" h-2 w-2 mb-28 text-red-700"></div>
+          <div className=" h-2 w-2 mb-52 lg:mb-32 text-red-700"></div>
           <div className=" h-2 w-2 mb-36 text-red-700" ref={scrollBottom}></div>
         </main>
 
         {progress && (
           <Line
-            className={` bg-white absolute bottom-20 items-center  flex mb-0 ml-5  w-[95%] ${
+            className={` bg-white absolute bottom-36 lg:bottom-20 items-center  flex mb-0 ml-5  w-[95%] ${
               usersBoard && "w-[78%] mr-5"
             }`}
             percent={progress}
@@ -223,7 +223,7 @@ function Chat() {
         )}
         {selectedImage && (
           <div
-            class="p-2 bg-discord_blue self-center  bottom-0 mb-24  absolute text-center w-fit  my-0 mx-auto text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex "
+            class="p-2 bg-discord_blue self-center  bottom-0 lg:mb-24 mb-36  absolute text-center w-fit  my-0 mx-auto text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex "
             role="alert"
           >
             <span className="font-semibold mr-2 text-center flex-auto">
@@ -232,7 +232,7 @@ function Chat() {
           </div>
         )}
         <form
-          className={` absolute bg-[#40444b] bottom-14 lg:bottom-0 items-center  flex my-0 mx-auto left-5 right-5  w-[90%] ${
+          className={` absolute bg-[#40444b] bottom-20 lg:bottom-5 items-center  flex my-0 mx-auto left-5 right-5  w-[90%] ${
             usersBoard && "w-[78%] mr-5"
           }  `}
         >
@@ -256,7 +256,7 @@ function Chat() {
           />
 
           <button onClick={selectedImage ? handleUpload : sendMessage}>
-            <ArrowCircleRightIcon className=" h-10  rounded-full  text-white bg-discord_blue" />
+            <ArrowCircleRightIcon className=" h-10 outline-none  rounded-full  text-white bg-discord_blue" />
           </button>
         </form>
       </div>
