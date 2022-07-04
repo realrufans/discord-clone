@@ -232,7 +232,7 @@ function Chat() {
           </div>
         )}
         <form
-          className={` absolute bg-[#40444b] bottom-5 items-center  flex my-0 mx-auto left-5 right-5  w-[90%] ${
+          className={` absolute bg-[#40444b] bottom-14 lg:bottom-0 items-center  flex my-0 mx-auto left-5 right-5  w-[90%] ${
             usersBoard && "w-[78%] mr-5"
           }  `}
         >

@@ -65,7 +65,7 @@ function Channel() {
   };
   return (
     //  className="relative flex   items-center  flex-col bg-[#202225] space-y-2  overflow-y-scroll scrollbar-hide  ">
-    <div className=" relative  min-w-[260px] max-w-[260px]    text-[#829297] h-screen     ">
+    <div className=" relative  min-w-[260px] max-w-[260px]    text-[#829297]      ">
       <div className=" p-3 border-b w-[100%] border-gray-800 text-white flex hover:bg-[#34373c] cursor-pointer justify-between items-center">
         <h2 className="  truncate ...  font-bold static ">{serverName}</h2>
         <ChevronDownIcon className="h-5" />
