@@ -109,7 +109,7 @@ function Channel() {
 
       {/* user profile details */}
 
-      <div className=" p-2 w-full max-h-fit  flex justify-between flex-wrap  absolute bottom-0 fixed ">
+      <div className=" p-2 w-full max-h-fit  flex justify-between flex-wrap  absolute bottom-0 ">
         <div className=" flex justify-between space-x-1  items-center">
           <img className="   rounded-full h-7" src={user?.photoURL} />
 
