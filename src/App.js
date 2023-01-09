@@ -5,6 +5,8 @@ import Home from "./components/Home";
 function App() {
   return (
     <div>
+
+      {/* routes */}
       <HashRouter>
         <Routes>
           <Route exact path="/" element={<Header />} />

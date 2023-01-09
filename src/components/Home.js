@@ -23,7 +23,7 @@ import {
 import discordHead from "../images/discordHead.svg";
 
 function Home() {
- 
+
   const dispatch = useDispatch();
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
@@ -119,14 +119,15 @@ function Home() {
     }
   };
 
+  // display channels and chat
   const displayChannelsAndChats = () => {
-    if (servers?.docs.length > 0 && serverId!== null) {
-    return  <>
+    if (servers?.docs.length > 0 && serverId !== null) {
+      return <>
         <Channel />
         <Chat />
       </>;
     } else {
-     return <div className=" text-white w-full h-screen    flex justify-center flex-col p-10">
+      return <div className=" text-white w-full h-screen    flex justify-center flex-col p-10">
         <EmojiSadIcon className="h-20" />
         <h1 className="text-2xl font-bold mx-auto my-0">
           Please create or Select a Server to continue...

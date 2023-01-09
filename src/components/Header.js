@@ -24,6 +24,8 @@ function Header() {
     )
   );
 
+
+  // automatically select the last created server and channel on launch.
   const serverdocs = servers?.docs;
   const serverLength = serverdocs?.length;
 
@@ -55,11 +57,16 @@ function Header() {
     }
   }
 
+  // login logic
   const login = (e) => {
     e.preventDefault();
     auth.signInWithPopup(provider).then(() => {
-      if (channelId && serverId) navigate(`channels/${serverId}/${channelId} `);
-      navigate(`channels/ `);
+      if (channelId && serverId) {
+        navigate(`channels/${serverId}/${channelId} `)
+      } else {
+        navigate(`channels/`)
+      }
+
     });
   };
 

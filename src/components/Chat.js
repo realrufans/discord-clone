@@ -33,15 +33,16 @@ function Chat() {
   const [UploadClicked, setUploadClicked] = useState(false);
   const [messages] = useCollection(
     channelId &&
-      db
-        .collection("servers")
-        .doc(serverId)
-        .collection("channels")
-        .doc(channelId)
-        .collection("messages")
-        .orderBy("timeStamp", "asc")
+    db
+      .collection("servers")
+      .doc(serverId)
+      .collection("channels")
+      .doc(channelId)
+      .collection("messages")
+      .orderBy("timeStamp", "asc")
   );
 
+  // returns unique users on the chat
   useEffect(() => {
     const roughBoardList = [];
     setBoardList([]);
@@ -56,7 +57,7 @@ function Chat() {
       const cleanList = roughBoardList.filter(({ senderName }, index) => {
         return !senders.includes(senderName, index + 1);
       });
-
+     
       setBoardList(cleanList);
     });
   }, [messages?.docs.length]);
@@ -169,6 +170,7 @@ function Chat() {
             />
             <div className="flex bg-[#202225] text-xs  rounded-md items-center">
               <input
+
                 type="text"
                 placeholder="Search"
                 className="     hidden  bg-[#202225] focus:outline-none p-1 text-white pl-1 placeholder-[#72767d] w-40 focus:w-60"
@@ -179,9 +181,8 @@ function Chat() {
         </header>
 
         <main
-          className={` text-[#2f3136] scrollbar-thin scrollbar-thumb-current  w-screen lg:w-full h-[100vh] p-6 ${
-            usersBoard && "w-[83%] "
-          }`}
+          className={` text-[#2f3136] scrollbar-thin scrollbar-thumb-current  w-screen lg:w-full h-[100vh] p-6 ${usersBoard && "w-[83%] "
+            }`}
         >
           {messages?.docs.map((doc) => {
             const {
@@ -213,9 +214,8 @@ function Chat() {
 
         {progress && (
           <Line
-            className={` bg-white absolute bottom-36 lg:bottom-20 items-center  flex mb-0 ml-5  w-[95%] ${
-              usersBoard && "w-[78%] mr-5"
-            }`}
+            className={` bg-white absolute bottom-36 lg:bottom-20 items-center  flex mb-0 ml-5  w-[95%] ${usersBoard && "w-[78%] mr-5"
+              }`}
             percent={progress}
             strokeWidth={1}
             strokeColor="#295de7"
@@ -232,9 +232,8 @@ function Chat() {
           </div>
         )}
         <form
-          className={` absolute bg-[#40444b] bottom-20 lg:bottom-5 items-center  flex my-0 mx-auto left-5 right-5  w-[90%] ${
-            usersBoard && "w-[78%] mr-5"
-          }  `}
+          className={` absolute bg-[#40444b] bottom-20 lg:bottom-5 items-center  flex my-0 mx-auto left-5 right-5  w-[90%] ${usersBoard && "w-[78%] mr-5"
+            }  `}
         >
           <label>
             <PhotographIcon className="h-10  ml-3 cursor-pointer   text-white rounded-full" />
@@ -248,6 +247,7 @@ function Chat() {
           </label>
 
           <input
+            onFocus={() => setShowUsersBoard(false)}
             disabled={!channelId}
             ref={inputRef}
             type="text"
